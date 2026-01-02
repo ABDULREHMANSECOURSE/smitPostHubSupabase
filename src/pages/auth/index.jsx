@@ -9,14 +9,20 @@ const Auth = () => {
     async function authFunc() {
         if (email === '' || password === '') {
             toast.error('fill all fields');
+            return;
         }
         console.log(email, password)
         if (isSignin) {
             const { data, error } = await supabase.auth.signUp({ email, password })
             console.log(data ? data : error)
+            toast.error(error)
+            if (error) toast.error(error.message)
+            else toast.success('Account Created succesful')
         } else {
             const { data, error } = await supabase.auth.signInWithPassword({ email, password })
             console.log(error ? error : data)
+            if (error) toast.error(error.message)
+            else toast.success('Login succesful')
         }
     }
 
