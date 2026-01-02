@@ -17,12 +17,18 @@ const Auth = () => {
             console.log(data ? data : error)
             toast.error(error)
             if (error) toast.error(error.message)
-            else toast.success('Account Created succesful')
+            else {
+                toast.success('Register succesful')
+                window.location.href = '/'
+            }
         } else {
             const { data, error } = await supabase.auth.signInWithPassword({ email, password })
             console.log(error ? error : data)
             if (error) toast.error(error.message)
-            else toast.success('Login succesful')
+            else {
+                toast.success('Login succesful')
+                window.location.href = '/'
+            }
         }
     }
 
