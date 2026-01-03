@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import supabase from '../supabaseClient'
+import supabase from '../../supabaseClient'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
@@ -8,7 +8,7 @@ const EditProfile = () => {
 
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
-    const [loading, setLoading] = useState('')
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const loadProfile = async () => {
@@ -17,13 +17,16 @@ const EditProfile = () => {
                 navigate('/auth')
                 return;
             }
+
             const { data, error } = await supabase
                 .from('profiles')
                 .select('username, email')
-                .eq('id', user.id)
+                .eq('uid', user.id)   // <- uid
                 .single();
+
             if (error && error.code !== "PGRST116") {
                 toast.error(error.message)
+                console.log(error.message)
             }
 
             if (data) {
@@ -47,17 +50,16 @@ const EditProfile = () => {
 
         const { error } = await supabase
             .from('profiles')
-            .upsert(
-                { id: user.id, username, email }
-            )
+            .upsert({ uid: user.id, username, email }) // <- uid
 
         if (error) {
             toast.error(error.message)
+            console.log(error.message)
         } else {
             toast.success('Profile saved!')
             navigate('/profile')
         }
-        setLoading(false);
+        setLoading(false)
     }
 
     if (loading) return <p>Loading...</p>

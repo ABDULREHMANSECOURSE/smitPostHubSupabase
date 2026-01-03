@@ -1,10 +1,10 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Auth from './pages/auth'
-import Home from './pages/home'
+import Auth from './auth'
+import Home from './pages/home/home'
 import { ToastContainer, Bounce } from 'react-toastify'
-import EditProfile from './pages/editProfile'
-import Profile from './pages/profile'
+import EditProfile from './pages/profile/editProfile'
+import Profile from './pages/profile/profile'
 
 const App = () => {
   return (
