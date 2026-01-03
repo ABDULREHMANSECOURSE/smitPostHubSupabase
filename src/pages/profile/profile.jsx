@@ -3,15 +3,18 @@ import { useNavigate } from 'react-router-dom'
 import supabase from '../../supabaseClient'
 import { toast } from 'react-toastify'
 const Profile = () => {
-    const [email, setEmail] = useState('')
-    const [username, setUsername] = useState('')
     const [loading, setLoading] = useState(false)
+    const [username, setUsername] = useState(' ')
+    const [email, setEmail] = useState(' ')
     const navigate = useNavigate()
 
     useEffect(() => {
         const showPrifile = async () => {
             setLoading(true)
             const { data: { user } } = await supabase.auth.getUser()
+            if (user) {
+                navigate('/auth')
+            }
             const { data, error } = await supabase
                 .from('profiles')
                 .select('email, username')
@@ -20,14 +23,14 @@ const Profile = () => {
 
             if (error) {
                 setLoading(false)
-                toast.error(error.message)
+                toast.error('Create profile before look')
+                navigate('/profile/edit')
             } else if (!data) {
                 setLoading(false)
-                navigate('/profile/edit')
             }
 
-            setEmail(data.email)
-            setUsername(data.username)
+            if (data.email) setUsername(data.email)
+            if (data.username) setEmail(data.username)
             setLoading(false)
         }
         showPrifile()
