@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import supabase from '../../supabaseClient'
+import { toast } from 'react-toastify'
 
 const PostCard = ({ post }) => {
     const [showFull, setShowFull] = useState(false)
@@ -13,13 +14,14 @@ const PostCard = ({ post }) => {
 
         const { error } = await supabase
             .from('posts')
-            .update({ likes: newLikes })
+            .update({ likes: newLikes })  // ✅ update field to newLikes
             .eq('pid', post.pid)
 
         if (error) {
-            console.error(error)
+            toast.error(error.message)   // ✅ use error.message
         }
     }
+
 
     return (
         <div style={{
