@@ -1,11 +1,17 @@
 import React, { useState } from 'react'
 import supabase from '../supabaseClient'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 const Auth = () => {
+    const navigate = useNavigate()
+    const checkAuth = async () => {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) navigate('/')
+    }
+    checkAuth()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isSignin, setIsSignin] = useState(false)
-
     async function authFunc() {
         if (email === '' || password === '') {
             toast.error('fill all fields');
@@ -19,7 +25,7 @@ const Auth = () => {
             if (error) toast.error(error.message)
             else {
                 toast.success('Register succesful')
-                window.location.href = '/'
+                navigate('/')
             }
         } else {
             const { data, error } = await supabase.auth.signInWithPassword({ email, password })
@@ -27,7 +33,7 @@ const Auth = () => {
             if (error) toast.error(error.message)
             else {
                 toast.success('Login succesful')
-                window.location.href = '/'
+                navigate('/')
             }
         }
     }

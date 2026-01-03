@@ -12,7 +12,7 @@ const Profile = () => {
         const showPrifile = async () => {
             setLoading(true)
             const { data: { user } } = await supabase.auth.getUser()
-            if (user) {
+            if (!user) {
                 navigate('/auth')
             }
             const { data, error } = await supabase
