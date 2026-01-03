@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Auth from './pages/auth'
 import Home from './pages/home'
 import { ToastContainer, Bounce } from 'react-toastify'
+import EditProfile from './pages/editProfile'
+import Profile from './pages/profile'
 
 const App = () => {
   return (
@@ -11,6 +13,8 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/auth' element={<Auth />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile/edit' element={<EditProfile />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer

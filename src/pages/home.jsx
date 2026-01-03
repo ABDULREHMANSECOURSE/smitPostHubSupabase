@@ -26,9 +26,22 @@ const Home = () => {
         }
     };
 
+    async function profile() {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        const { data: profile } = await supabase.from('profiles').select('id').eq('id', user.id).single()
+
+        if (profile) {
+            navigate('/profile')
+        } else {
+            navigate('/profile/edit')
+        }
+    }
+
     return (
         <>
             <h1>Home</h1>
+            <button onClick={() => profile()}>Profile</button>
             <button onClick={() => logout()}>Logout</button>
         </>
     )
