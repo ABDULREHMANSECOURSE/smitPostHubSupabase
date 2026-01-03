@@ -9,7 +9,7 @@ const AddPost = () => {
     const [content, setContent] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [loading, setLoading] = useState(false);
-    const [checkingProfile, setCheckingProfile] = useState(true); // initially check profile
+    const [checkingProfile, setCheckingProfile] = useState(true);
 
     useEffect(() => {
         const checkProfile = async () => {
@@ -17,7 +17,6 @@ const AddPost = () => {
             const userId = sessionData?.session?.user?.id;
 
             if (!userId) {
-                // user not logged in
                 navigate('/auth');
                 return;
             }
@@ -49,7 +48,7 @@ const AddPost = () => {
             .insert({
                 content,
                 image_url: imageUrl,
-                is_public: true, // default public post
+                is_public: true,
             });
 
         setLoading(false);
@@ -58,7 +57,7 @@ const AddPost = () => {
             toast.error(error.message);
         } else {
             toast.success('Post added!');
-            navigate('/'); // go back to feed
+            navigate('/');
         }
     };
 
