@@ -12,7 +12,7 @@ const Home = () => {
         const { data, error } = await supabase
             .from('posts')
             .select('*, profiles(username)')
-            .order('created_at', { ascending: false }) // ✅ FIX
+            .order('created_at', { ascending: false })
 
         if (error) {
             console.error(error)

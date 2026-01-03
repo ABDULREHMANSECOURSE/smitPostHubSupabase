@@ -21,7 +21,7 @@ const EditProfile = () => {
             const { data, error } = await supabase
                 .from('profiles')
                 .select('username, email')
-                .eq('uid', user.id)   // <- uid
+                .eq('uid', user.id)
                 .single();
 
             if (error && error.code !== "PGRST116") {
@@ -50,7 +50,7 @@ const EditProfile = () => {
 
         const { error } = await supabase
             .from('profiles')
-            .upsert({ uid: user.id, username, email }) // <- uid
+            .upsert({ uid: user.id, username, email })
 
         if (error) {
             toast.error(error.message)
