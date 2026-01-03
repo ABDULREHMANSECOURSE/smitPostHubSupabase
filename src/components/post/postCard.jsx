@@ -56,7 +56,7 @@ const PostCard = ({ post }) => {
 
             {post.content?.length > 100 && (
                 <button
-                    style={{ border: 'none', background: 'none', color: '#1877f2' }}
+                    style={{ border: 'none', background: 'none', color: '#1877f2', cursor: 'pointer' }}
                     onClick={() => setShowFull(!showFull)}
                 >
                     {showFull ? 'See less' : 'See more'}
