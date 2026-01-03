@@ -14,11 +14,11 @@ const PostCard = ({ post }) => {
 
         const { error } = await supabase
             .from('posts')
-            .update({ likes: newLikes })  // ✅ update field to newLikes
+            .update({ likes: newLikes })
             .eq('pid', post.pid)
 
         if (error) {
-            toast.error(error.message)   // ✅ use error.message
+            toast.error(error.message)
         }
     }
 
@@ -31,10 +31,8 @@ const PostCard = ({ post }) => {
             maxWidth: '600px',
             background: '#fff'
         }}>
-            {/* Author */}
             <h4>{post.profiles?.username || 'Anonymous'}</h4>
 
-            {/* Image */}
             {post.image_url && (
                 <img
                     src={post.image_url}
@@ -66,7 +64,6 @@ const PostCard = ({ post }) => {
                 </button>
             )}
 
-            {/* Like */}
             <div style={{ marginTop: '10px' }}>
                 <button
                     onClick={handleLike}
