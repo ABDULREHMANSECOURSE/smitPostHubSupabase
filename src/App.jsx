@@ -5,6 +5,7 @@ import Home from './pages/home/home'
 import { ToastContainer, Bounce } from 'react-toastify'
 import EditProfile from './pages/profile/editProfile'
 import Profile from './pages/profile/profile'
+import AddPost from './pages/studio'
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
           <Route path='/auth' element={<Auth />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/profile/edit' element={<EditProfile />} />
+          <Route path='/studio' element={<AddPost />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer
