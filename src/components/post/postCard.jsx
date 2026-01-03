@@ -45,7 +45,6 @@ const PostCard = ({ post }) => {
                 />
             )}
 
-            {/* Content */}
             <p style={{
                 overflow: 'hidden',
                 display: '-webkit-box',
