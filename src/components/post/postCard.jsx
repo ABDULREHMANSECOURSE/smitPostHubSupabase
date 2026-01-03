@@ -1,115 +1,53 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import supabase from "../../supabaseClient";
 
 const PostCard = ({ post }) => {
-    const [showFull, setShowFull] = useState(false);
+    const [likes, setLikes] = useState(post.likes || 0);
     const [liked, setLiked] = useState(false);
-    const [likesCount, setLikesCount] = useState(post.likes || 0);
-    const [animate, setAnimate] = useState(false);
 
-    const handleLike = () => {
-        setAnimate(true);
+    const handleLike = async () => {
+        const newLikes = liked ? likes - 1 : likes + 1;
 
-        if (liked) {
-            setLikesCount(likesCount - 1);
-        } else {
-            setLikesCount(likesCount + 1);
-        }
-
+        setLikes(newLikes);
         setLiked(!liked);
 
-        // animation reset
-        setTimeout(() => setAnimate(false), 300);
-    };
+        const { error } = await supabase
+            .from("posts")
+            .update({ likes: newLikes })
+            .eq("pid", post.pid);
 
-    const cardStyle = {
-        border: '1px solid #ccc',
-        borderRadius: '10px',
-        padding: '15px',
-        margin: '10px 10px',
-        maxWidth: '600px',
-        boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-        fontFamily: 'sans-serif',
-        background: '#fff'
-    };
-
-    const contentStyle = {
-        overflow: 'hidden',
-        display: '-webkit-box',
-        WebkitLineClamp: showFull ? 'none' : 2,
-        WebkitBoxOrient: 'vertical',
-        textOverflow: 'ellipsis',
-        marginTop: '10px'
-    };
-
-    const imageStyle = {
-        maxWidth: '100%',
-        maxHeight: '1000px',
-        borderRadius: '10px',
-        marginTop: '10px',
-        display: 'block',
-        marginLeft: 'auto',
-        marginRight: 'auto'
-    };
-
-    const buttonStyle = {
-        background: 'none',
-        border: 'none',
-        color: '#1877f2',
-        cursor: 'pointer',
-        padding: 0,
-        fontSize: '0.9rem',
-        marginTop: '5px'
-    };
-
-    const likeButtonStyle = {
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '6px',
-        padding: '6px 12px',
-        borderRadius: '20px',
-        cursor: 'pointer',
-        border: '1px solid #ccc',
-        background: liked ? '#e7f3ff' : '#f5f5f5',
-        color: liked ? '#1877f2' : '#555',
-        transform: animate ? 'scale(1.3)' : 'scale(1)',
-        transition: 'all 0.2s ease'
+        if (error) {
+            console.error("Like update failed", error);
+        }
     };
 
     return (
-        <div style={cardStyle}>
-            {/* Author */}
-            <h4 style={{ marginBottom: '5px' }}>
-                {post.authorName || 'Anonymous'}
-            </h4>
+        <div style={{ border: "1px solid #ccc", padding: "15px", borderRadius: "10px" }}>
+            <h4>@{post.profiles?.username}</h4>
 
-            {/* Image */}
+            <p>{post.content}</p>
+
             {post.image_url && (
                 <img
+                    style={{ width: "100%", borderRadius: "10px" }}
                     src={post.image_url}
-                    alt="post-image"
-                    style={imageStyle}
+                    alt='image'
                 />
             )}
 
-            {/* Content */}
-            <p style={contentStyle}>{post.content}</p>
-
-            {/* See more / less */}
-            {post.content && post.content.length > 100 && (
-                <button
-                    style={buttonStyle}
-                    onClick={() => setShowFull(!showFull)}
-                >
-                    {showFull ? 'See less' : 'See more'}
-                </button>
-            )}
-
-            {/* Like button */}
-            <div style={{ marginTop: '12px' }}>
-                <button style={likeButtonStyle} onClick={handleLike}>
-                    👍 {likesCount}
-                </button>
-            </div>
+            <button
+                onClick={handleLike}
+                style={{
+                    background: liked ? "#0a66c2" : "#eee",
+                    color: liked ? "#fff" : "#000",
+                    padding: "8px 15px",
+                    borderRadius: "20px",
+                    border: "none",
+                    cursor: "pointer"
+                }}
+            >
+                👍 {likes}
+            </button>
         </div>
     );
 };

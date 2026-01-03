@@ -9,9 +9,6 @@ const Home = () => {
 
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(true)
-    useEffect(() => {
-        fetchPosts()
-    }, [])
     const fetchPosts = async () => {
         const { data, error } = await supabase
             .from('posts')
@@ -21,8 +18,15 @@ const Home = () => {
 
         if (error) {
             console.error(error)
+        } else {
+            setPosts(data)
         }
+        setLoading(false)
     }
+    useEffect(() => {
+        fetchPosts()
+    }, [])
+
 
 
     useEffect(() => {
@@ -64,6 +68,7 @@ const Home = () => {
         }
     ];
 
+    if (loading) return <p>Loading...</p>
     return (
         <>
             <h1>Home</h1>
@@ -71,7 +76,7 @@ const Home = () => {
             }>Profile</button>
             <button onClick={() => logout()}>Logout</button>
             <div>
-                {postsArray.map(post => (
+                {posts.map(post => (
                     <PostCard key={post.pid} post={post} />
                 ))}
             </div>
