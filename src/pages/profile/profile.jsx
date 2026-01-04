@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import supabase from '../../supabaseClient'
 import { toast } from 'react-toastify'
+import BackToHomeBtn from '../../components/backToHomeBtn'
 const Profile = () => {
     const [loading, setLoading] = useState(false)
     const [username, setUsername] = useState(' ')
@@ -41,7 +42,7 @@ const Profile = () => {
             <h1>Email: {email}</h1>
             <h1>Username: {username}</h1>
             <button onClick={() => navigate('/profile/edit')}>edit profile</button>
-            <button onClick={() => navigate('/')}>Home</button>
+            <BackToHomeBtn />
         </>
     )
 }
