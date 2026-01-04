@@ -6,14 +6,12 @@ const PostCard = ({ post }) => {
     const [likers, setLikers] = useState(post.likers || [])
     const [userId, setUserId] = useState(null)
 
-    // 🔹 Get current user
     useEffect(() => {
         supabase.auth.getUser().then(({ data }) => {
             setUserId(data.user?.id || null)
         })
     }, [])
 
-    // 🔥 LIVE UPDATE (Realtime Likes)
     useEffect(() => {
         if (!post?.pid) return
 
@@ -48,7 +46,6 @@ const PostCard = ({ post }) => {
             ? likers.filter(id => id !== userId)
             : [...likers, userId]
 
-        // ⚡ instant UI
         setLikers(updatedLikers)
 
         const { error } = await supabase
@@ -58,7 +55,6 @@ const PostCard = ({ post }) => {
 
         if (error) {
             console.error('Like update failed:', error)
-            // rollback if error
             setLikers(likers)
         }
     }
