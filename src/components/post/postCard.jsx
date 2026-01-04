@@ -1,24 +1,65 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import supabase from '../../supabaseClient'
-import { toast } from 'react-toastify'
 
 const PostCard = ({ post }) => {
     const [showFull, setShowFull] = useState(false)
-    const [likes, setLikes] = useState(post.likes || 0)
-    const [liked, setLiked] = useState(false)
+    const [likers, setLikers] = useState(post.likers || [])
+    const [userId, setUserId] = useState(null)
+
+    // 🔹 Get current user
+    useEffect(() => {
+        supabase.auth.getUser().then(({ data }) => {
+            setUserId(data.user?.id || null)
+        })
+    }, [])
+
+    // 🔥 LIVE UPDATE (Realtime Likes)
+    useEffect(() => {
+        if (!post?.pid) return
+
+        const channel = supabase
+            .channel(`post-likes-${post.pid}`)
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'posts',
+                    filter: `pid=eq.${post.pid}`
+                },
+                (payload) => {
+                    setLikers(payload.new.likers || [])
+                }
+            )
+            .subscribe()
+
+        return () => {
+            supabase.removeChannel(channel)
+        }
+    }, [post.pid])
+
+    const liked = userId ? likers.includes(userId) : false
+    const likes = likers.length
 
     const handleLike = async () => {
-        const newLikes = liked ? likes - 1 : likes + 1
-        setLikes(newLikes)
-        setLiked(!liked)
+        if (!userId || !post?.pid) return
+
+        const updatedLikers = liked
+            ? likers.filter(id => id !== userId)
+            : [...likers, userId]
+
+        // ⚡ instant UI
+        setLikers(updatedLikers)
 
         const { error } = await supabase
             .from('posts')
-            .update({ likes: newLikes })
+            .update({ likers: updatedLikers })
             .eq('pid', post.pid)
 
         if (error) {
-            toast.error(error.message)
+            console.error('Like update failed:', error)
+            // rollback if error
+            setLikers(likers)
         }
     }
 
@@ -56,7 +97,12 @@ const PostCard = ({ post }) => {
 
             {post.content?.length > 100 && (
                 <button
-                    style={{ border: 'none', background: 'none', color: '#1877f2', cursor: 'pointer' }}
+                    style={{
+                        border: 'none',
+                        background: 'none',
+                        color: '#1877f2',
+                        cursor: 'pointer'
+                    }}
                     onClick={() => setShowFull(!showFull)}
                 >
                     {showFull ? 'See less' : 'See more'}
