@@ -39,7 +39,7 @@ const Profile = () => {
     return (
         <>
             <h1>Email: {email}</h1>
-            <h1>Username:{username}</h1>
+            <h1>Username: {username}</h1>
             <button onClick={() => navigate('/profile/edit')}>edit profile</button>
             <button onClick={() => navigate('/')}>Home</button>
         </>
