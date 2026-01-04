@@ -29,8 +29,8 @@ const Profile = () => {
                 setLoading(false)
             }
 
-            if (data.email) setUsername(data.email)
-            if (data.username) setEmail(data.username)
+            if (data.username) setUsername(data.username)
+            if (data.email) setEmail(data.email)
             setLoading(false)
         }
         showPrifile()
