@@ -25,7 +25,6 @@ const EditProfile = () => {
                 .single();
 
             if (error && error.code !== "PGRST116") {
-                toast.error(error.message)
                 console.log(error.message)
             }
 
@@ -62,30 +61,44 @@ const EditProfile = () => {
         setLoading(false)
     }
 
-    if (loading) return <p>Loading...</p>
+    if (loading) return <div className="profile-container"><p>Loading...</p></div>
 
     return (
-        <>
-            <div>
-                <h1>Edit Profile</h1>
+        <div className="profile-container">
+            <div className="profile-box" style={{maxWidth: '500px'}}>
+                <button className="btn-secondary back-btn" onClick={() => navigate(-1)} style={{padding: '8px 16px', fontSize: '0.9rem'}}>
+                    &larr; Back
+                </button>
+                
+                <h1 style={{textAlign: 'left', marginBottom: '20px'}}>Edit Profile</h1>
 
-                <input
-                    type="text"
-                    placeholder='Username'
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
+                <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                    <label className="info-label">Display Name</label>
+                    <input
+                        type="text"
+                        placeholder='Enter your username'
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                </div>
 
-                <input
-                    type="email"
-                    placeholder='Email'
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
+                <div style={{display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '10px'}}>
+                    <label className="info-label">Email Address</label>
+                    <input
+                        type="email"
+                        placeholder='Enter your email'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        disabled
+                        style={{opacity: 0.6, cursor: 'not-allowed'}}
+                    />
+                </div>
 
-                <button onClick={saveProfile}>Save Profile</button>
+                <button onClick={saveProfile} disabled={loading || !username.trim()}>
+                    {loading ? 'Saving...' : 'Save Profile'}
+                </button>
             </div>
-        </>
+        </div>
     )
 }
 

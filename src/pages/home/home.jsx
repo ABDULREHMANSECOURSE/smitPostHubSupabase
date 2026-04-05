@@ -32,25 +32,31 @@ const Home = () => {
         })
     }, [navigate])
 
-    if (loading) return <p>Loading...</p>
+    if (loading) return <div className="home-container" style={{textAlign: 'center', marginTop: '50px'}}><p>Loading Activity...</p></div>
 
     return (
-        <>
-            <h1>Home</h1>
+        <div className="home-container">
+            <div className="home-header">
+                <h1>PostHub</h1>
+                <div className="header-buttons">
+                    <button className="btn-secondary" onClick={() => navigate('/studio')}>+ Create</button>
+                    <button className="btn-secondary" onClick={() => navigate('/profile')}>Profile</button>
+                    <button className="btn-danger" onClick={async () => {
+                        await supabase.auth.signOut()
+                        navigate('/auth')
+                    }}>
+                        Logout
+                    </button>
+                </div>
+            </div>
 
-            <button onClick={() => navigate('/profile')}>Profile</button>
-            <button onClick={async () => {
-                await supabase.auth.signOut()
-                navigate('/auth')
-            }}>
-                Logout
-            </button>
-            <button onClick={() => navigate('/studio')}>studio</button>
-
-            {posts.map(post => (
-                <PostCard key={post.pid} post={post} />
-            ))}
-        </>
+            <div className="posts-feed">
+                {posts.map(post => (
+                    <PostCard key={post.pid} post={post} />
+                ))}
+                {posts.length === 0 && <p style={{textAlign: 'center', marginTop: '40px'}}>No posts yet. Be the first to post!</p>}
+            </div>
+        </div>
     )
 }
 

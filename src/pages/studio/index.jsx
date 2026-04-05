@@ -29,7 +29,7 @@ const AddPost = () => {
                 .single();
 
             if (error || !profile) {
-                toast.error("Can't upload anything before completing your profile!");
+                toast.error("Complete your profile to post!");
                 navigate('/profile/edit');
             }
 
@@ -41,7 +41,10 @@ const AddPost = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!content && !imageUrl) return alert('Post cannot be empty!');
+        if (!content && !imageUrl) {
+            toast.error('Post cannot be empty!');
+            return;
+        }
         setLoading(true);
 
         const { error } = await supabase
@@ -57,51 +60,54 @@ const AddPost = () => {
         if (error) {
             toast.error(error.message);
         } else {
-            toast.success('Post added!');
+            toast.success('Posted successfully \ud83d\ude80');
             navigate('/');
         }
     };
 
-    if (checkingProfile) return <p>Checking profile...</p>;
+    if (checkingProfile) return <div className="studio-container"><p>Verifying access...</p></div>;
 
     return (
-        <>
+        <div className="home-container">
             <BackToHomeBtn />
-            <div style={{ maxWidth: '600px', margin: '30px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '10px', background: '#fff' }}>
-                <h2>Create Post</h2>
+            <div className="studio-box">
+                <h2 style={{borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '15px', margin: '0 0 20px 0'}}>New Post</h2>
 
-                <form onSubmit={handleSubmit}>
-                    <textarea
-                        placeholder="What's on your mind?"
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        style={{ width: '100%', minHeight: '100px', padding: '10px', marginBottom: '10px', borderRadius: '10px', border: '1px solid #ccc' }}
-                    />
+                <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
+                    <div>
+                        <textarea
+                            placeholder="What's mind-blowing today?"
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            style={{ minHeight: '150px', resize: 'vertical' }}
+                        />
+                    </div>
 
-                    <input
-                        placeholder="Image URL (optional)"
-                        value={imageUrl}
-                        onChange={(e) => setImageUrl(e.target.value)}
-                        style={{ width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '10px', border: '1px solid #ccc' }}
-                    />
+                    <div>
+                        <input
+                            placeholder="Paste an Image URL (optional)"
+                            value={imageUrl}
+                            onChange={(e) => setImageUrl(e.target.value)}
+                        />
+                    </div>
+
+                    {imageUrl && (
+                        <div style={{marginTop: '10px'}}>
+                            <p className="info-label" style={{marginBottom: '10px'}}>Image Preview</p>
+                            <img src={imageUrl} alt="Preview" style={{maxWidth: '100%', maxHeight: '200px', borderRadius: '12px', objectFit: 'cover'}} onError={(e) => {e.target.style.display = 'none'; toast.error('Invalid image URL')}} />
+                        </div>
+                    )}
 
                     <button
                         type="submit"
-                        disabled={loading}
-                        style={{
-                            padding: '10px 20px',
-                            borderRadius: '20px',
-                            border: 'none',
-                            background: '#1877f2',
-                            color: '#fff',
-                            cursor: 'pointer',
-                        }}
+                        disabled={loading || (!content && !imageUrl)}
+                        style={{marginTop: '10px', width: '100%', padding: '16px'}}
                     >
-                        {loading ? 'Posting...' : 'Post'}
+                        {loading ? 'Publishing...' : 'Publish Post'}
                     </button>
                 </form>
             </div>
-        </>
+        </div>
     );
 };
 

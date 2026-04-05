@@ -59,65 +59,51 @@ const PostCard = ({ post }) => {
         }
     }
 
+    const username = post.profiles?.username || 'Anonymous';
+    const initals = username.substring(0, 2).toUpperCase();
+
     return (
-        <div style={{
-            border: '1px solid #ccc',
-            borderRadius: '10px',
-            padding: '15px',
-            margin: '10px auto',
-            maxWidth: '600px',
-            background: '#fff'
-        }}>
-            <h4>{post.profiles?.username || 'Anonymous'}</h4>
+        <div className="post-card">
+            <div className="post-header">
+                <div className="post-avatar">{initals}</div>
+                <div className="post-username">{username}</div>
+            </div>
 
-            {post.image_url && (
-                <img
-                    src={post.image_url}
-                    alt=""
-                    style={{
-                        width: '100%',
-                        borderRadius: '10px',
-                        marginTop: '10px'
-                    }}
-                />
-            )}
-
-            <p style={{
+            <p className="post-content" style={{
                 overflow: 'hidden',
                 display: '-webkit-box',
-                WebkitLineClamp: showFull ? 'none' : 2,
+                WebkitLineClamp: showFull ? 'none' : 3,
                 WebkitBoxOrient: 'vertical'
             }}>
                 {post.content}
             </p>
 
-            {post.content?.length > 100 && (
+            {post.content?.length > 150 && (
                 <button
-                    style={{
-                        border: 'none',
-                        background: 'none',
-                        color: '#1877f2',
-                        cursor: 'pointer'
-                    }}
+                    className="see-more-btn"
                     onClick={() => setShowFull(!showFull)}
                 >
-                    {showFull ? 'See less' : 'See more'}
+                    {showFull ? 'Show less' : 'Read more'}
                 </button>
             )}
 
-            <div style={{ marginTop: '10px' }}>
+            {post.image_url && (
+                <img
+                    src={post.image_url}
+                    alt="Post media"
+                    className="post-image"
+                />
+            )}
+
+            <div className="post-actions">
                 <button
                     onClick={handleLike}
-                    style={{
-                        border: 'none',
-                        padding: '6px 12px',
-                        borderRadius: '20px',
-                        background: liked ? '#1877f2' : '#eee',
-                        color: liked ? '#fff' : '#000',
-                        cursor: 'pointer'
-                    }}
+                    className={`like-btn ${liked ? 'liked' : ''}`}
                 >
-                    👍 {likes}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '6px'}}>
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                    {likes} {likes === 1 ? 'Like' : 'Likes'}
                 </button>
             </div>
         </div>
